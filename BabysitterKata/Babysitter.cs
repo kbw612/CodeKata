@@ -15,13 +15,9 @@ namespace BabysitterKata
             TimeSpan timeSpanMidnightToEndTime = TimeSpan.Zero;
             int payStartTimeToBedtime = 0, payBedtimeToMidnight = 0, payMidnightToMaxEndTime = 0;
 
-            DateTime midnight = startTime.Date;
+            DateTime midnight = DateTime.MinValue;
 
-            // if start time after 4 am then set midnight to next day midnight
-            if (startTime.Hour > 4)
-            {
-                midnight = midnight.AddDays(1);
-            }
+            SetTimes(ref startTime, ref endTime, ref midnight);
 
             if (endTime < bedTime)
             {
@@ -42,6 +38,31 @@ namespace BabysitterKata
             payMidnightToMaxEndTime = timeSpanMidnightToEndTime.Hours * 16;
 
             return payStartTimeToBedtime + payBedtimeToMidnight + payMidnightToMaxEndTime;
+        }
+
+        private void SetTimes(ref DateTime startTime, ref DateTime endTime, ref DateTime midnight)
+        {
+            midnight = startTime.Date;
+            DateTime minStartTime = startTime;
+
+            // if start time after 4 am then set midnight to next day midnight
+            if (startTime.Hour > 4)
+            {
+                midnight = midnight.AddDays(1);
+                minStartTime = startTime.Date.AddHours(17);
+            }
+
+            DateTime maxEndTime = midnight.AddHours(4);
+
+            if (endTime > maxEndTime)
+            {
+                endTime = maxEndTime;
+            }
+
+            if (startTime < minStartTime)
+            {
+                startTime = minStartTime;
+            }
         }
     }
 }

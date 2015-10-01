@@ -57,5 +57,19 @@ namespace BabysitterTest
             // Assert
             Assert.AreEqual(136, _pay);
         }
+
+        [TestMethod]
+        public void WhenBabysitterStartsWorkBefore5pmAndStopsWorkAfter4am()
+        {
+            // Arrange
+            // Act
+            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 16, 0, 0),
+                                            endTime: new DateTime(2015, 9, 30, 5, 0, 0),
+                                            bedTime: new DateTime(2015, 9, 29, 21, 0, 0)
+                                           );
+
+            // Assert
+            Assert.AreEqual(136, _pay);
+        }
     }
 }
