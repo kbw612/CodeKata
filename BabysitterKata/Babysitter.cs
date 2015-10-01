@@ -10,7 +10,8 @@ namespace BabysitterKata
     {
         public int CalculatePay(DateTime startTime, DateTime endTime)
         {
-            return 0;
+            TimeSpan ts = endTime - startTime;
+            return ts.Hours * 12;
         }
     }
 }
