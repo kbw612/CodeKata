@@ -12,9 +12,15 @@ namespace BabysitterKata
         {
             TimeSpan timeSpanStartTimeToBedtime = TimeSpan.Zero;
             TimeSpan timeSpanBedtimeToMidnight = TimeSpan.Zero;
+            int payStartTimeToBedtime = 0, payBedtimeToMidnight = 0;
 
-            TimeSpan ts = endTime - startTime;
-            return ts.Hours * 12;
+            timeSpanStartTimeToBedtime = bedTime - startTime;
+            timeSpanBedtimeToMidnight = endTime - bedTime;
+
+            payStartTimeToBedtime = timeSpanStartTimeToBedtime.Hours * 12;
+            payBedtimeToMidnight = timeSpanBedtimeToMidnight.Hours * 8;
+            
+            return payStartTimeToBedtime + payBedtimeToMidnight;
         }
     }
 }

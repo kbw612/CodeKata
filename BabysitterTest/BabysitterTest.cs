@@ -36,7 +36,7 @@ namespace BabysitterTest
             int pay = babysitter.CalculatePay(startTime, endTime, bedTime);
 
             // Assert
-            Assert.AreEqual(48, 72);
+            Assert.AreEqual(72, pay);
         }
     }
 }
