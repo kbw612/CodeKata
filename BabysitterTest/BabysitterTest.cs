@@ -85,5 +85,20 @@ namespace BabysitterTest
             // Assert
             Assert.AreEqual(64, _pay);
         }
+
+        [TestMethod]
+        public void WhenBabysitterStartsAndEndsWorkWithFractionalHours()
+        {
+            // Arrange
+            // Act
+            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 17, 30, 0),
+                                            endTime: new DateTime(2015, 9, 30, 4, 30, 0),
+                                            bedTime: new DateTime(2015, 9, 29, 21, 30, 0)
+                                           );
+
+            // Assert
+            Assert.AreEqual(136, _pay);
+        }
+
     }
 }
