@@ -120,5 +120,20 @@ namespace BabysitterTest
             // Assert
             Assert.AreEqual(0, _pay);
         }
+
+        [TestMethod]
+        public void WhenBedtimePassedIsAfter4AmEndTime()
+        {
+            // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 30, 4, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 30, 5, 0, 0);
+
+            // Act
+            _pay = _babysitter.CalculatePay();
+
+            // Assert
+            Assert.AreEqual(0, _pay);
+        }
     }
 }

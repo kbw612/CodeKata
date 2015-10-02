@@ -20,6 +20,7 @@ namespace BabysitterKata
 
         private DateTime _midnight = DateTime.MinValue;
         private DateTime _minStartTime = DateTime.MinValue;
+        private DateTime _maxEndTime = DateTime.MinValue;
 
         public int CalculatePay()
         {
@@ -51,6 +52,13 @@ namespace BabysitterKata
             {
                 valid = false;
             }
+
+            if (this.BedTime > _maxEndTime)
+            {
+                valid = false;
+            }
+
+
             return valid;
         }
 
@@ -67,10 +75,10 @@ namespace BabysitterKata
             }
 
             // make sure end time is 4 am or earlier
-            DateTime maxEndTime = _midnight.AddHours(FOUR_AM_MILITARY_TIME);
-            if (this.EndTime > maxEndTime)
+            _maxEndTime = _midnight.AddHours(FOUR_AM_MILITARY_TIME);
+            if (this.EndTime > _maxEndTime)
             {
-                this.EndTime = maxEndTime;
+                this.EndTime = _maxEndTime;
             }
 
             // make sure start time is 5 pm or later
