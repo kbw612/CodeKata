@@ -11,91 +11,116 @@ namespace BabysitterKata
         const int START_TIME_TO_BEDTIME_HOURLY_RATE = 12;
         const int BEDTIME_TO_MIDNIGHT_HOURLY_RATE = 8;
         const int MIDNIGHT_TO_END_TIME_HOURLY_RATE = 16;
+        const int FOUR_AM_MILITARY_TIME = 4;
+        const int FIVE_PM_MILITARY_TIME = 17;
 
-        public int CalculatePay(DateTime startTime, DateTime endTime, DateTime bedTime)
+        public DateTime StartTime { get; set; }
+        public DateTime EndTime { get; set; }
+        public DateTime BedTime { get; set; }
+
+        private DateTime _midnight = DateTime.MinValue;
+        private DateTime _minStartTime = DateTime.MinValue;
+
+        public int CalculatePay()
         {
-            DateTime midnight = DateTime.MinValue;
+            this.StartTime = RemoveMinutesAndSeconds(this.StartTime);
+            this.EndTime = RemoveMinutesAndSeconds(this.EndTime);
+            this.BedTime = RemoveMinutesAndSeconds(this.BedTime);
 
-            startTime = RemoveMinutesAndSeconds(startTime);
-            endTime = RemoveMinutesAndSeconds(endTime);
-            bedTime = RemoveMinutesAndSeconds(bedTime);
+            InitializeTimeProperties();
 
-            SetTimes(ref startTime, ref endTime, ref midnight);
+            if (AreTimePropertiesValid())
+            { 
+                int payStartTimeToBedtime = CalcuatePayBeforeBedtime();
+                int payBedtimeToMidnight = CalcuatePayFromBedtimeToMidnight();
+                int payMidnightToEndTime = CalcuatePayFromMidnightToEndTime();
 
-            int payStartTimeToBedtime = CalcuatePayBeforeBedtime(startTime, endTime, bedTime);
-            int payBedtimeToMidnight = CalcuatePayFromBedtimeToMidnight(startTime, endTime, bedTime, midnight);
-            int payMidnightToEndTime = CalcuatePayFromMidnightToEndTime(startTime, endTime, bedTime, midnight);
-
-            return payStartTimeToBedtime + payBedtimeToMidnight + payMidnightToEndTime;
+                return payStartTimeToBedtime + payBedtimeToMidnight + payMidnightToEndTime;
+            }
+            else
+            {
+                return 0;
+            }
         }
 
-        private void SetTimes(ref DateTime startTime, ref DateTime endTime, ref DateTime midnight)
+        private bool AreTimePropertiesValid()
         {
-            midnight = startTime.Date;
-            DateTime minStartTime = startTime;
+            bool valid = true;
+
+            if (this.BedTime < _minStartTime && _minStartTime < _midnight)
+            {
+                valid = false;
+            }
+            return valid;
+        }
+
+        private void InitializeTimeProperties()
+        {
+            _midnight = this.StartTime.Date;
+            _minStartTime = this.StartTime;
 
             // if start time after 4 am then set midnight to next day midnight
-            if (startTime.Hour > 4)
+            if (this.StartTime.Hour > FOUR_AM_MILITARY_TIME)
             {
-                midnight = midnight.AddDays(1);
-                minStartTime = startTime.Date.AddHours(17);
+                _midnight = _midnight.AddDays(1);
+                _minStartTime = this.StartTime.Date.AddHours(FIVE_PM_MILITARY_TIME);
             }
 
             // make sure end time is 4 am or earlier
-            DateTime maxEndTime = midnight.AddHours(4);
-            if (endTime > maxEndTime)
+            DateTime maxEndTime = _midnight.AddHours(FOUR_AM_MILITARY_TIME);
+            if (this.EndTime > maxEndTime)
             {
-                endTime = maxEndTime;
+                this.EndTime = maxEndTime;
             }
 
             // make sure start time is 5 pm or later
-            if (startTime < minStartTime)
+            if (this.StartTime < _minStartTime)
             {
-                startTime = minStartTime;
+                this.StartTime = _minStartTime;
             }
         }
 
-        private int CalcuatePayBeforeBedtime(DateTime startTime, DateTime endTime, DateTime bedTime)
+        private int CalcuatePayBeforeBedtime()
         {
             TimeSpan timeSpanStartTimeToBedtime = TimeSpan.Zero;
 
-            if (endTime < bedTime)
+            if (this.EndTime < this.BedTime)
             {
-                timeSpanStartTimeToBedtime = endTime - startTime;
+                timeSpanStartTimeToBedtime = this.EndTime - this.StartTime;
             }
-            else if (startTime < bedTime)
+            else if (this.StartTime < this.BedTime)
             {
-                timeSpanStartTimeToBedtime = bedTime - startTime;
+                timeSpanStartTimeToBedtime = this.BedTime - this.StartTime;
             }
 
             return timeSpanStartTimeToBedtime.Hours * START_TIME_TO_BEDTIME_HOURLY_RATE;
         }
 
-        private int CalcuatePayFromBedtimeToMidnight(DateTime startTime, DateTime endTime, DateTime bedTime, DateTime midnight)
+        private int CalcuatePayFromBedtimeToMidnight()
         {
             TimeSpan timeSpanBedtimeToMidnight = TimeSpan.Zero;
 
-            if (startTime < midnight && endTime > bedTime)
+            if (this.StartTime < _midnight && this.EndTime > this.BedTime)
             {
-                timeSpanBedtimeToMidnight = midnight - bedTime;
+                timeSpanBedtimeToMidnight = _midnight - this.BedTime;
             }
 
             return timeSpanBedtimeToMidnight.Hours * BEDTIME_TO_MIDNIGHT_HOURLY_RATE;
         }
 
-        private int CalcuatePayFromMidnightToEndTime(DateTime startTime, DateTime endTime, DateTime bedTime, DateTime midnight)
+        private int CalcuatePayFromMidnightToEndTime()
         {
             TimeSpan timeSpanMidnightToEndTime = TimeSpan.Zero;
 
-            if (startTime >= midnight && endTime >= midnight)
+            if (this.StartTime >= _midnight && this.EndTime >= _midnight)
             {
-                timeSpanMidnightToEndTime = endTime - midnight;
+                timeSpanMidnightToEndTime = this.EndTime - _midnight;
             }
             else
             {
-                if (endTime > bedTime)
+                if (this.EndTime > this.BedTime)
                 {
-                    timeSpanMidnightToEndTime = endTime - midnight;
+                    timeSpanMidnightToEndTime = this.EndTime - _midnight;
                 }
             }
 

@@ -20,11 +20,12 @@ namespace BabysitterTest
         public void WhenBabysitterWorksUntilBedtime()
         {
             // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 29, 21, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 21, 0, 0);
+
             // Act
-            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 17, 0, 0),
-                                               endTime: new DateTime(2015, 9, 29, 21, 0, 0),
-                                               bedTime: new DateTime(2015, 9, 29, 21, 0, 0)
-                                              );
+            _pay = _babysitter.CalculatePay();
 
             // Assert
             Assert.AreEqual(48, _pay);
@@ -34,11 +35,12 @@ namespace BabysitterTest
         public void WhenBabysitterWorksUntilMidnight()
         {
             // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 30, 0, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 21, 0, 0);
+
             // Act
-            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 17, 0, 0),
-                                            endTime: new DateTime(2015, 9, 30, 0, 0, 0),
-                                            bedTime: new DateTime(2015, 9, 29, 21, 0, 0)
-                                           );
+            _pay = _babysitter.CalculatePay();
 
             // Assert
             Assert.AreEqual(72, _pay);
@@ -48,11 +50,12 @@ namespace BabysitterTest
         public void WhenBabysitterWorksAllPossibleHours()
         {
             // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 30, 4, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 21, 0, 0);
+
             // Act
-            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 17, 0, 0),
-                                            endTime: new DateTime(2015, 9, 30, 4, 0, 0),
-                                            bedTime: new DateTime(2015, 9, 29, 21, 0, 0)
-                                           );
+            _pay = _babysitter.CalculatePay();
 
             // Assert
             Assert.AreEqual(136, _pay);
@@ -62,11 +65,12 @@ namespace BabysitterTest
         public void WhenBabysitterStartsWorkBefore5pmAndStopsWorkAfter4am()
         {
             // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 16, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 30, 5, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 21, 0, 0);
+
             // Act
-            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 16, 0, 0),
-                                            endTime: new DateTime(2015, 9, 30, 5, 0, 0),
-                                            bedTime: new DateTime(2015, 9, 29, 21, 0, 0)
-                                           );
+            _pay = _babysitter.CalculatePay();
 
             // Assert
             Assert.AreEqual(136, _pay);
@@ -76,11 +80,12 @@ namespace BabysitterTest
         public void WhenBabysitterStartsWorkingAtMidnightAndStopsWorkingAt4am()
         {
             // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 30, 0, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 30, 4, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 21, 0, 0);
+
             // Act
-            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 30, 0, 0, 0),
-                                            endTime: new DateTime(2015, 9, 30, 4, 0, 0),
-                                            bedTime: new DateTime(2015, 9, 29, 21, 0, 0)
-                                           );
+            _pay = _babysitter.CalculatePay();
 
             // Assert
             Assert.AreEqual(64, _pay);
@@ -90,15 +95,30 @@ namespace BabysitterTest
         public void WhenBabysitterStartsAndEndsWorkWithFractionalHours()
         {
             // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 30, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 30, 4, 30, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 21, 30, 0);
+
             // Act
-            _pay = _babysitter.CalculatePay(startTime: new DateTime(2015, 9, 29, 17, 30, 0),
-                                            endTime: new DateTime(2015, 9, 30, 4, 30, 0),
-                                            bedTime: new DateTime(2015, 9, 29, 21, 30, 0)
-                                           );
+            _pay = _babysitter.CalculatePay();
 
             // Assert
             Assert.AreEqual(136, _pay);
         }
 
+        [TestMethod]
+        public void WhenBedtimePassedIsBefore5PmStartTime()
+        {
+            // Arrange
+            _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
+            _babysitter.EndTime = new DateTime(2015, 9, 29, 23, 0, 0);
+            _babysitter.BedTime = new DateTime(2015, 9, 29, 16, 0, 0);
+
+            // Act
+            _pay = _babysitter.CalculatePay();
+
+            // Assert
+            Assert.AreEqual(0, _pay);
+        }
     }
 }
