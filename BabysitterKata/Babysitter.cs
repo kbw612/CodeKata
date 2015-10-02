@@ -10,20 +10,86 @@ namespace BabysitterKata
         const int FOUR_AM_MILITARY_TIME = 4;
         const int FIVE_PM_MILITARY_TIME = 17;
 
-        public DateTime StartTime { get; set; }
-        public DateTime EndTime { get; set; }
-        public DateTime BedTime { get; set; }
+        private DateTime _startTime = DateTime.MinValue;
+        public DateTime StartTime
+        {
+            get
+            {
+                return _startTime;
+            }
+            set
+            {
+                _startTime = RemoveMinutesAndSeconds(value);
+            }
+        }
+
+        private DateTime _endTime = DateTime.MinValue;
+        public DateTime EndTime
+        {
+            get
+            {
+                return _endTime;
+            }
+            set
+            {
+                _endTime = RemoveMinutesAndSeconds(value);
+            }
+        }
+
+        private DateTime _bedTime = DateTime.MinValue;
+        public DateTime BedTime
+        {
+            get
+            {
+                return _bedTime;
+            }
+            set
+            {
+                _bedTime = RemoveMinutesAndSeconds(value);
+            }
+        }
 
         private DateTime _midnight = DateTime.MinValue;
+        public DateTime Midnight
+        {
+            get
+            {
+                return _midnight;
+            }
+            set
+            {
+                _midnight = RemoveMinutesAndSeconds(value);
+            }
+        }
+
         private DateTime _minStartTime = DateTime.MinValue;
+        public DateTime MinStartTime
+        {
+            get
+            {
+                return _minStartTime;
+            }
+            set
+            {
+                _minStartTime = RemoveMinutesAndSeconds(value);
+            }
+        }
+
         private DateTime _maxEndTime = DateTime.MinValue;
+        public DateTime MaxEndTime
+        {
+            get
+            {
+                return _maxEndTime;
+            }
+            set
+            {
+                _maxEndTime = RemoveMinutesAndSeconds(value);
+            }
+        }
 
         public int CalculatePay()
         {
-            this.StartTime = RemoveMinutesAndSeconds(this.StartTime);
-            this.EndTime = RemoveMinutesAndSeconds(this.EndTime);
-            this.BedTime = RemoveMinutesAndSeconds(this.BedTime);
-
             InitializeTimeProperties();
 
             if (AreTimePropertiesValid())
@@ -44,11 +110,11 @@ namespace BabysitterKata
         {
             bool valid = true;
 
-            if (this.BedTime < _minStartTime && _minStartTime < _midnight)
+            if (this.BedTime < this.MinStartTime && this.MinStartTime < this.Midnight)
             {
                 valid = false;
             }
-            else if (this.BedTime > _maxEndTime)
+            else if (this.BedTime > this.MaxEndTime)
             {
                 valid = false;
             }
@@ -62,27 +128,27 @@ namespace BabysitterKata
 
         private void InitializeTimeProperties()
         {
-            _midnight = this.StartTime.Date;
-            _minStartTime = this.StartTime;
+            this.Midnight = this.StartTime.Date;
+            this.MinStartTime = this.StartTime;
 
             // if start time after 4 am then set midnight to next day midnight
             if (this.StartTime.Hour > FOUR_AM_MILITARY_TIME)
             {
-                _midnight = _midnight.AddDays(1);
-                _minStartTime = this.StartTime.Date.AddHours(FIVE_PM_MILITARY_TIME);
+                this.Midnight = this.Midnight.AddDays(1);
+                this.MinStartTime = this.StartTime.Date.AddHours(FIVE_PM_MILITARY_TIME);
             }
 
             // make sure end time is 4 am or earlier
-            _maxEndTime = _midnight.AddHours(FOUR_AM_MILITARY_TIME);
-            if (this.EndTime > _maxEndTime)
+            this.MaxEndTime = this.Midnight.AddHours(FOUR_AM_MILITARY_TIME);
+            if (this.EndTime > this.MaxEndTime)
             {
-                this.EndTime = _maxEndTime;
+                this.EndTime = this.MaxEndTime;
             }
 
             // make sure start time is 5 pm or later
-            if (this.StartTime < _minStartTime)
+            if (this.StartTime < this.MinStartTime)
             {
-                this.StartTime = _minStartTime;
+                this.StartTime = this.MinStartTime;
             }
         }
 
@@ -106,9 +172,9 @@ namespace BabysitterKata
         {
             TimeSpan timeSpanBedtimeToMidnight = TimeSpan.Zero;
 
-            if (this.StartTime < _midnight && this.EndTime > this.BedTime)
+            if (this.StartTime < this.Midnight && this.EndTime > this.BedTime)
             {
-                timeSpanBedtimeToMidnight = _midnight - this.BedTime;
+                timeSpanBedtimeToMidnight = this.Midnight - this.BedTime;
             }
 
             return timeSpanBedtimeToMidnight.Hours * BEDTIME_TO_MIDNIGHT_HOURLY_RATE;
@@ -118,15 +184,15 @@ namespace BabysitterKata
         {
             TimeSpan timeSpanMidnightToEndTime = TimeSpan.Zero;
 
-            if (this.StartTime >= _midnight && this.EndTime >= _midnight)
+            if (this.StartTime >= this.Midnight && this.EndTime >= this.Midnight)
             {
-                timeSpanMidnightToEndTime = this.EndTime - _midnight;
+                timeSpanMidnightToEndTime = this.EndTime - this.Midnight;
             }
             else
             {
                 if (this.EndTime > this.BedTime)
                 {
-                    timeSpanMidnightToEndTime = this.EndTime - _midnight;
+                    timeSpanMidnightToEndTime = this.EndTime - this.Midnight;
                 }
             }
 

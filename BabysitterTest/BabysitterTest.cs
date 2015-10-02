@@ -2,6 +2,11 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using BabysitterKata;
 
+//
+// Babysitter Kata
+// https://gist.github.com/jameskbride/5482722
+//
+
 namespace BabysitterTest
 {
     [TestClass]
@@ -17,7 +22,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterWorksUntilBedtime()
+        public void CalculatePay_BabysitterWorksUntilBedtime_Returns48Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
@@ -32,7 +37,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterWorksUntilMidnight()
+        public void CalculatePay_BabysitterWorksUntilMidnight_Returns72Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
@@ -47,7 +52,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterWorksAllPossibleHours()
+        public void CalculatePay_BabysitterWorksAllPossibleHours_Returns136Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
@@ -62,7 +67,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterStartsWorkBefore5pmAndStopsWorkAfter4am()
+        public void CalculatePay_BabysitterStartsWorkBefore5pmAndStopsWorkAfter4am_Returns136Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 16, 0, 0);
@@ -77,7 +82,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterStartsWorkingAtMidnightAndStopsWorkingAt4am()
+        public void CalculatePay_BabysitterStartsWorkingAtMidnightAndStopsWorkingAt4am_Returns64Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 30, 0, 0, 0);
@@ -92,7 +97,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterStartsAndEndsWorkWithFractionalHours()
+        public void CalculatePay_BabysitterStartsAndEndsWorkWithFractionalHours_Returns136Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 30, 0);
@@ -107,7 +112,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBedtimePassedIsBefore5PmStartTime()
+        public void CalculatePay_BedtimePassedIsBefore5PmStartTime_ReturnsZeroDollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
@@ -122,7 +127,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBedtimePassedIsAfter4AmEndTime()
+        public void CalculatePay_BedtimePassedIsAfter4AmEndTime_ReturnsZeroDollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 17, 0, 0);
@@ -137,7 +142,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenStartTimeIsGreaterThanEndTime()
+        public void CalculatePay_StartTimeIsGreaterThanEndTime_ReturnsZeroDollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 23, 0, 0);
@@ -152,7 +157,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterStartsWorkingAtBedtimeAndStopsWorkingAt4am()
+        public void CalculatePay_BabysitterStartsWorkingAtBedtimeAndStopsWorkingAt4am_Returns88Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 21, 0, 0);
@@ -167,7 +172,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterStartsWorkingAfterBedtimeAndStopsWorkingBeforeMidnight()
+        public void CalculatePay_BabysitterStartsWorkingAfterBedtimeAndStopsWorkingBeforeMidnight_Returns8Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 22, 0, 0);
@@ -182,7 +187,7 @@ namespace BabysitterTest
         }
 
         [TestMethod]
-        public void WhenBabysitterStartsAndStopsWorkingBeforeBedtime()
+        public void CalculatePay_BabysitterStartsAndStopsWorkingBeforeBedtime_Returns24Dollars()
         {
             // Arrange
             _babysitter.StartTime = new DateTime(2015, 9, 29, 18, 0, 0);
