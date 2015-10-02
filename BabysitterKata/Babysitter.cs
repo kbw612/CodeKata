@@ -52,12 +52,14 @@ namespace BabysitterKata
             {
                 valid = false;
             }
-
-            if (this.BedTime > _maxEndTime)
+            else if (this.BedTime > _maxEndTime)
             {
                 valid = false;
             }
-
+            else if (this.StartTime >= this.EndTime)
+            {
+                valid = false;
+            }
 
             return valid;
         }
